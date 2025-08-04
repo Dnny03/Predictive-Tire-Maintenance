@@ -1,6 +1,5 @@
 import pandas as pd
 import joblib
-from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
@@ -19,12 +18,8 @@ df.columns = [col.strip() for col in df.columns]
 print("✅ Data loaded. Shape:", df.shape)
 print("🧠 Columns found:", df.columns.tolist())
 
-# Encode 'status' columns
-label_encoder = LabelEncoder()
-df['status_encoded'] = label_encoder.fit_transform(df['status'])
-
-# Prepare features and labels
-features = df[['tread_depth', 'pressure', 'mileage', 'age_months', 'temperature', 'status_encoded']]
+# ✅ Prepare features and labels (no more 'status' column used)
+features = df[['tread_depth', 'pressure', 'mileage', 'age_months', 'temperature']]
 labels = df['failure']
 
 # Train/test split
@@ -41,6 +36,6 @@ y_pred = model.predict(X_test)
 print("\n🎯 Classification Report:\n", classification_report(y_test, y_pred))
 print("✅ Accuracy Score:", round(accuracy_score(y_test, y_pred), 4))
 
+# Save the model only
 joblib.dump(model, 'status_model.pkl')
-joblib.dump(label_encoder, 'label_encoder.pkl')
-
+print("💾 Model saved as 'status_model.pkl'")
